@@ -10,7 +10,10 @@ brain_slice.meta #get the meta data of the DICOM
 brain_slice.shape #get the shape of the DICOM (rows, columns)
 brain_slice[0] #first row of the 2D array
 
-# Visualize the image #
+###########################
+### Visualize the image ###
+###########################
+
 fig, ax = plt.subplots(1, 1, figsize = (10, 10))
 plt.imshow(brain_slice, cmap ='gray')
 
