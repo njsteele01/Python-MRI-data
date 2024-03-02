@@ -1,0 +1,44 @@
+import imageio as iio
+import numpy as np
+import scipy.ndimage as ndi
+import matplotlib.pyplot as plt
+import nibabel as nib
+import os
+
+brain_slice = iio.imread('###DICOM_FILE_HERE###', 'DICOM')
+brain_slice.meta #get the meta data of the DICOM
+brain_slice.shape #get the shape of the DICOM (rows, columns)
+brain_slice[0] #first row of the 2D array
+
+# Visualize the image #
+fig, ax = plt.subplots(1, 1, figsize = (10, 10))
+plt.imshow(brain_slice, cmap ='gray')
+
+# Volumes #
+brain_vol = iio.volread('###PATH_TO_DICOM_FOLDER_HERE###', 'DICOM')
+brain_vol.shape
+plt.imshow(brain_vol[48], cmap = 'gray')
+
+#reconstruct an axial slice form the volume#
+plt.imshow(brain_vol[:,120], cmap = 'gray')
+plt.axis('off')
+
+plt.imshow(ndi.rotate(brain_vol[:, :, 130], 270), cmap = 'gray') #rotates and creates image
+plt.axis('off')
+
+#show multiple images as once
+fig_rows = 4
+fig_cols = 4
+n_subplots = fig_rows * fig_cols
+n_slice = brain_vol.shape[0]
+step_size = n_slice // n_subplots
+plot_range = n_subplots * step_size
+start_stop = int((n_slice - plot_range) / 2)
+
+fig, axs = plt.subplots(fig_rows, fig_cols, figsize=[10, 10])
+
+for idx, img in enumerate(range(start_stop, plot_range, step_size)):
+    axs.flat[idx].imshow(brain_vol[img, :, :], cmap='gray')
+    axs.flat[idx].axis('off')        
+plt.tight_layout()
+plt.show()
